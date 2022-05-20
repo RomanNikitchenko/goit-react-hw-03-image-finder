@@ -1,23 +1,25 @@
 import React from 'react';
-import Searchbar from './Searchbar/Searchbar'
+import Searchbar from './Searchbar/Searchbar';
+import ImageGallery from './ImageGallery/ImageGallery';
+import s from './app.module.css';
 
-class App extends React.Component { 
-
+class App extends React.Component {
   state = {
     imagesName: '',
   };
-  
+
   handleFormSubmit = imagesName => {
     this.setState({ imagesName: imagesName });
   };
 
   render() {
     return (
-      <div>
-        <Searchbar onSubmit={this.handleFormSubmit}/>
+      <div className={s.App}>
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery imagesName={this.state.imagesName} />
       </div>
-    )
-  };
-};
+    );
+  }
+}
 
 export default App;

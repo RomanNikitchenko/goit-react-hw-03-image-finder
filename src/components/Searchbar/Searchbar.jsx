@@ -12,13 +12,14 @@ class Searchbar extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { imagesName } = this.state;
 
     if (this.state.imagesName.trim() === '') {
       alert('введите имя изображения');
       return;
     }
 
-    this.props.onSubmit(this.state.imagesName);
+    this.props.onSubmit(imagesName);
 
     this.setState({ imagesName: '' });
   };
@@ -34,8 +35,6 @@ class Searchbar extends React.Component {
           <input
             className={s.SearchFormInput}
             type="text"
-            // autocomplete="off"
-            // autofocus
             placeholder="Search images and photos"
             onChange={this.handleNameChange}
             value={this.state.imagesName}

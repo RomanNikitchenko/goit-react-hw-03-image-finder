@@ -9,14 +9,15 @@ class App extends React.Component {
   };
 
   handleFormSubmit = imagesName => {
-    this.setState({ imagesName: imagesName });
+    this.setState({ imagesName });
   };
 
   render() {
+    const { imagesName } = this.state;
     return (
       <div className={s.App}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery imagesName={this.state.imagesName} />
+        <ImageGallery imagesName={imagesName} />
       </div>
     );
   }

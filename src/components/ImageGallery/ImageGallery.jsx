@@ -3,6 +3,7 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import imagesAPI from '../services/images-api';
 import s from './imageGallery.module.css';
+import PokemonPendingView from '../Loader/Loader';
 
 class ImageGallery extends React.Component {
   state = {
@@ -97,7 +98,7 @@ class ImageGallery extends React.Component {
     }
 
     if (status === 'pending') {
-      return <h1>...Загружаем</h1>;
+      return <PokemonPendingView />;
     }
 
     if (status === 'resolved') {
@@ -105,11 +106,9 @@ class ImageGallery extends React.Component {
         <div>
           <ul className={s.ImageGallery}>
             <ImageGalleryItem images={images} />
-            {loading && <h1>...загружаем</h1>}
           </ul>
-          {amount.length === limit && (
-            <Button onLoadMore={this.handlPageButton} />
-          )}
+          {loading && <PokemonPendingView />}
+          {amount.length === limit && !loading && <Button onLoadMore={this.handlPageButton} />}
           {amount.length === 0 && <div>Такой картинки нет</div>}
         </div>
       );

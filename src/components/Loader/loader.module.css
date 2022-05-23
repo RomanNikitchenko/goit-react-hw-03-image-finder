@@ -1,0 +1,14 @@
+.iconSpin {
+    margin-right: 10px;
+    animation: iconSpin 2s infinite linear;
+}
+
+@keyframes iconSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(359deg);
+    }
+}

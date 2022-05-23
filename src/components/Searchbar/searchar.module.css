@@ -38,17 +38,16 @@
     width: 48px;
     height: 48px;
     border: 0;
-    background-image: url('https: //www.flaticon.com/ru/premium-icon/search_3963073?related_id=3963073&origin=search');
     background-size: 40%;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.6;
+    opacity: 0.8;
     transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     outline: none;
 }
 
-.SearchForm-button:hover {
+.SearchFormbutton:hover {
     opacity: 1;
 }
 

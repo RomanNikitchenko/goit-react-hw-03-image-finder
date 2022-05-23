@@ -1,5 +1,6 @@
 import React from 'react';
 import s from './searchar.module.css';
+import {ReactComponent as AddIcon} from '../Icons/search-2.svg'
 
 class Searchbar extends React.Component {
   state = {
@@ -29,6 +30,7 @@ class Searchbar extends React.Component {
       <header className={s.Searchbar}>
         <form className={s.SearchForm} onSubmit={this.handleSubmit}>
           <button className={s.SearchFormButton} type="submit">
+            <AddIcon />
             <span className={s.SearchFormButtonLabel}>Search</span>
           </button>
 

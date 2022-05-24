@@ -4,8 +4,7 @@ import Button from '../Button/Button';
 import imagesAPI from '../services/images-api';
 import s from './imageGallery.module.css';
 import PokemonPendingView from '../Loader/Loader';
-import Modal from '../Modal/Modal'
-
+import Modal from '../Modal/Modal';
 
 class ImageGallery extends React.Component {
   state = {
@@ -18,6 +17,8 @@ class ImageGallery extends React.Component {
     page: 1,
     openButton: false,
     showModal: false,
+    largeImageURL: null,
+    alt: '',
   };
 
   handlPageButton = page => {
@@ -31,8 +32,12 @@ class ImageGallery extends React.Component {
 
   handlChangeModal = () => {
     this.setState(({ showModal }) => ({
-      showModal: !showModal
+      showModal: !showModal,
     }));
+  };
+
+  handlChangeModalImage = ({ largeImageURL, alt }) => {
+    this.setState({ largeImageURL: largeImageURL, alt: alt });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -100,7 +105,17 @@ class ImageGallery extends React.Component {
   }
 
   render() {
-    const { images, error, status, loading, amount, limit, showModal } = this.state;
+    const {
+      images,
+      error,
+      status,
+      loading,
+      amount,
+      limit,
+      showModal,
+      largeImageURL,
+      alt,
+    } = this.state;
 
     if (status === 'idle') {
       return <div>Введите имя картинки</div>;
@@ -114,12 +129,22 @@ class ImageGallery extends React.Component {
       return (
         <div>
           <ul className={s.ImageGallery}>
-            <ImageGalleryItem images={images} onShowModal={this.handlChangeModal} />
+            <ImageGalleryItem
+              images={images}
+              onShowModal={this.handlChangeModal}
+              changeImageURL={this.handlChangeModalImage}
+            />
           </ul>
           {loading && <PokemonPendingView />}
-          {amount.length === limit && !loading && <Button onLoadMore={this.handlPageButton} />}
+          {amount.length === limit && !loading && (
+            <Button onLoadMore={this.handlPageButton} />
+          )}
           {amount.length === 0 && <div>Такой картинки нет</div>}
-          {showModal && <Modal onClose={this.handlChangeModal}></Modal>}
+          {showModal && (
+            <Modal onClose={this.handlChangeModal}>
+              <img src={largeImageURL} alt={alt} />
+            </Modal>
+          )}
         </div>
       );
     }

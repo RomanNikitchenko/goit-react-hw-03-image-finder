@@ -4,7 +4,7 @@ import s from './modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export default class Modal extends Component {
+class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -27,10 +27,12 @@ export default class Modal extends Component {
 
   render() {
     return createPortal(
-      <div className="Modal__backdrop" onClick={this.handleBackdropClick}>
-        <div className="Modal__content">{this.props.children}</div>
+      <div className={s.Modal__backdrop} onClick={this.handleBackdropClick}>
+        <div className={s.Modal__content}>{this.props.children}</div>
       </div>,
       modalRoot
     );
   }
 }
+
+export default Modal;

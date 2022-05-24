@@ -4,6 +4,8 @@ import Button from '../Button/Button';
 import imagesAPI from '../services/images-api';
 import s from './imageGallery.module.css';
 import PokemonPendingView from '../Loader/Loader';
+import Modal from '../Modal/Modal'
+
 
 class ImageGallery extends React.Component {
   state = {
@@ -15,6 +17,7 @@ class ImageGallery extends React.Component {
     limit: 12,
     page: 1,
     openButton: false,
+    showModal: false,
   };
 
   handlPageButton = page => {
@@ -24,6 +27,12 @@ class ImageGallery extends React.Component {
         openButton: true,
       };
     });
+  };
+
+  handlChangeModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal
+    }));
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -91,7 +100,7 @@ class ImageGallery extends React.Component {
   }
 
   render() {
-    const { images, error, status, loading, amount, limit } = this.state;
+    const { images, error, status, loading, amount, limit, showModal } = this.state;
 
     if (status === 'idle') {
       return <div>Введите имя картинки</div>;
@@ -105,11 +114,12 @@ class ImageGallery extends React.Component {
       return (
         <div>
           <ul className={s.ImageGallery}>
-            <ImageGalleryItem images={images} />
+            <ImageGalleryItem images={images} onShowModal={this.handlChangeModal} />
           </ul>
           {loading && <PokemonPendingView />}
           {amount.length === limit && !loading && <Button onLoadMore={this.handlPageButton} />}
           {amount.length === 0 && <div>Такой картинки нет</div>}
+          {showModal && <Modal onClose={this.handlChangeModal}></Modal>}
         </div>
       );
     }

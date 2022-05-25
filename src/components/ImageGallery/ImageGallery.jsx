@@ -3,7 +3,7 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import imagesAPI from '../services/images-api';
 import s from './imageGallery.module.css';
-import PokemonPendingView from '../Loader/Loader';
+import ImagePendingView from '../Loader/Loader';
 import Modal from '../Modal/Modal';
 
 class ImageGallery extends React.Component {
@@ -53,7 +53,6 @@ class ImageGallery extends React.Component {
     if (differentName || differentPage) {
       if (differentName && !this.state.openButton) {
         setTimeout(() => {
-          console.log('differentName');
           return this.setState({
             status: 'pending',
             page: 1,
@@ -62,7 +61,6 @@ class ImageGallery extends React.Component {
       }
 
       if (differentPage && this.state.openButton) {
-        console.log('differentPage');
         setTimeout(() => {
           return this.setState({
             page: nextPageButton,
@@ -76,10 +74,8 @@ class ImageGallery extends React.Component {
 
         imagesAPI
           .fetchImages(nextName, limit, page)
-
           .then(images => {
             if (differentName && !this.state.openButton) {
-              console.log('differentName then');
               return this.setState({
                 images: [...images.hits],
                 amount: [...images.hits],
@@ -89,7 +85,6 @@ class ImageGallery extends React.Component {
             }
 
             if (differentPage && this.state.openButton) {
-              console.log('differentPage then');
               return this.setState(state => ({
                 images: [...state.images, ...images.hits],
                 amount: [...images.hits],
@@ -122,7 +117,7 @@ class ImageGallery extends React.Component {
     }
 
     if (status === 'pending') {
-      return <PokemonPendingView />;
+      return <ImagePendingView />;
     }
 
     if (status === 'resolved') {
@@ -135,7 +130,7 @@ class ImageGallery extends React.Component {
               changeImageURL={this.handlChangeModalImage}
             />
           </ul>
-          {loading && <PokemonPendingView />}
+          {loading && <ImagePendingView />}
           {amount.length === limit && !loading && (
             <Button onLoadMore={this.handlPageButton} />
           )}

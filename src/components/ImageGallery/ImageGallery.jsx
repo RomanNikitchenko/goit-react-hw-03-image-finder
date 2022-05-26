@@ -9,7 +9,6 @@ import Modal from '../Modal/Modal';
 class ImageGallery extends React.Component {
   state = {
     images: [],
-    amount: [],
     error: null,
     status: 'idle',
     loading: false,
@@ -19,12 +18,13 @@ class ImageGallery extends React.Component {
     showModal: false,
     largeImageURL: null,
     alt: '',
+    totalHits: 0,
   };
 
-  handlPageButton = page => {
+  handlPageButton = () => {
     this.setState(statePrev => {
       return {
-        page: statePrev.page + page,
+        page: statePrev.page + 1,
         openButton: true,
       };
     });
@@ -57,7 +57,7 @@ class ImageGallery extends React.Component {
             status: 'pending',
             page: 1,
           });
-        }, 100);
+        }, 10);
       }
 
       if (differentPage && this.state.openButton) {
@@ -66,37 +66,44 @@ class ImageGallery extends React.Component {
             page: nextPageButton,
             loading: true,
           });
-        }, 100);
+        }, 10);
       }
-
-      setTimeout(() => {
-        const { limit, page } = this.state;
-
-        imagesAPI
-          .fetchImages(nextName, limit, page)
-          .then(images => {
-            if (differentName && !this.state.openButton) {
-              return this.setState({
-                images: [...images.hits],
-                amount: [...images.hits],
-                status: 'resolved',
-                loading: false,
-              });
-            }
-
-            if (differentPage && this.state.openButton) {
-              return this.setState(state => ({
-                images: [...state.images, ...images.hits],
-                amount: [...images.hits],
-                status: 'resolved',
-                loading: false,
-                openButton: false,
-              }));
-            }
-          })
-          .catch(error => this.setState({ error: error, status: 'rejected' }));
-      }, 200);
     }
+
+    setTimeout(() => {
+      const { limit, page } = this.state;
+
+      imagesAPI
+        .fetchImages(nextName, limit, page)
+        .then(images => {
+          if (!images.hits.length) {
+            return this.setState({
+              images: [...images.hits],
+              status: 'repeat',
+              loading: false,
+            });
+          }
+
+          if (differentName && !this.state.openButton) {
+            this.setState({
+              images: [...images.hits],
+              totalHits: images.totalHits,
+              status: 'resolved',
+              loading: false,
+            });
+          }
+
+          if (differentPage && this.state.openButton) {
+            this.setState(state => ({
+              images: [...state.images, ...images.hits],
+              status: 'resolved',
+              loading: false,
+              openButton: false,
+            }));
+          }
+        })
+        .catch(error => this.setState({ error: error, status: 'rejected' }));
+    }, 20);
   }
 
   render() {
@@ -105,11 +112,10 @@ class ImageGallery extends React.Component {
       error,
       status,
       loading,
-      amount,
-      limit,
       showModal,
       largeImageURL,
       alt,
+      totalHits,
     } = this.state;
 
     if (status === 'idle') {
@@ -130,11 +136,13 @@ class ImageGallery extends React.Component {
               changeImageURL={this.handlChangeModalImage}
             />
           </ul>
+
           {loading && <ImagePendingView />}
-          {amount.length === limit && !loading && (
+
+          {images.length !== totalHits && !loading && (
             <Button onLoadMore={this.handlPageButton} />
           )}
-          {amount.length === 0 && <div>Такой картинки нет</div>}
+
           {showModal && (
             <Modal onClose={this.handlChangeModal}>
               <img src={largeImageURL} alt={alt} />
@@ -142,6 +150,10 @@ class ImageGallery extends React.Component {
           )}
         </div>
       );
+    }
+
+    if (status === 'repeat') {
+      return <div>Такой картинки нет</div>;
     }
 
     if (status === 'rejected') {

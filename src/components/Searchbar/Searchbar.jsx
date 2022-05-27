@@ -1,10 +1,12 @@
 import React from 'react';
 import s from './searchar.module.css';
-import { ReactComponent as AddIcon } from '../Icons/search-2.svg';
+import { ReactComponent as AddIcon } from '../../Icons/search-2.svg';
 
 class Searchbar extends React.Component {
   state = {
     imagesName: '',
+    page: 1,
+    limit: 12,
   };
 
   handleNameChange = e => {
@@ -13,16 +15,13 @@ class Searchbar extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { imagesName } = this.state;
 
     if (this.state.imagesName.trim() === '') {
       alert('введите имя изображения');
       return;
     }
 
-    this.props.onSubmit(imagesName);
-
-    // this.setState({ imagesName: '' });
+    this.props.onSubmit(this.state);
   };
 
   render() {

@@ -5,6 +5,7 @@ import Button from './Button/Button';
 import imagesAPI from '../services/images-api';
 import s from './app.module.css';
 import ImagePendingView from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 class App extends React.Component {
   state = {
@@ -17,10 +18,12 @@ class App extends React.Component {
     error: null,
     totalHits: 0,
     loading: false,
+    showModal: false,
+    largeImageURL: '',
+    alt: '',
   };
 
-  componentDidUpdate(prevProps, prevState) { 
-
+  componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.imagesName;
     const nextName = this.state.imagesName;
 
@@ -32,10 +35,8 @@ class App extends React.Component {
     const differentPage = prevPage !== nextPage;
 
     if (differentName || differentPage) {
-
-
       if (differentName) {
-          this.setState({
+        this.setState({
           status: 'pending',
           openButton: false,
         });
@@ -58,7 +59,7 @@ class App extends React.Component {
               openButton: true,
               status: 'resolved',
               totalHits: images.totalHits,
-            })
+            });
           }
 
           if (differentPage) {
@@ -74,12 +75,11 @@ class App extends React.Component {
     }
   }
 
-
-  handleFormSubmit = ({imagesName, page, limit }) => {
+  handleFormSubmit = ({ imagesName, page, limit }) => {
     this.setState({
       imagesName: imagesName,
       page: page,
-      limit: limit
+      limit: limit,
     });
   };
 
@@ -92,8 +92,26 @@ class App extends React.Component {
     });
   };
 
+  handlChangeModalImage = (source = '', alt = '') => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      largeImageURL: source,
+      alt: alt,
+    }));
+  };
+
   render() {
-    const { images, openButton, status, error, loading, totalHits } = this.state;
+    const {
+      images,
+      openButton,
+      status,
+      error,
+      loading,
+      totalHits,
+      largeImageURL,
+      alt,
+      showModal,
+    } = this.state;
 
     return (
       <div className={s.App}>
@@ -102,9 +120,18 @@ class App extends React.Component {
         {status === 'idle' && <div>Введите имя картинки</div>}
         {status === 'repeat' && <div>Такой картинки нет</div>}
         {status === 'rejected' && <h1>{error.massage}</h1>}
-        {status === 'resolved' && <ImageGallery images={images} />}
+        {status === 'resolved' && (
+          <ImageGallery images={images} onOpen={this.handlChangeModalImage} />
+        )}
+        {showModal && (
+          <Modal onClose={this.handlChangeModalImage}>
+            <img src={largeImageURL} alt={alt} />
+          </Modal>
+        )}
         {loading && <ImagePendingView />}
-        {openButton && !loading && images.length !== totalHits && <Button onLoadMore={this.handlPageButton} />}
+        {openButton && !loading && images.length !== totalHits && (
+          <Button onLoadMore={this.handlPageButton} />
+        )}
       </div>
     );
   }

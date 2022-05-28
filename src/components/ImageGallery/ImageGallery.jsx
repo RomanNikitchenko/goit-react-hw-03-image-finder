@@ -1,24 +1,13 @@
 import React from 'react';
-import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import s from './imageGallery.module.css';
+import PropTypes from 'prop-types';
 
-class ImageGallery extends React.Component {
-  handlChangeModalImage = (largeImageURL, tags) => {
-    this.props.onOpen(largeImageURL, tags);
-  };
+const ImageGallery = ({ children }) => {
+  return <ul className={s.ImageGallery}>{children}</ul>;
+};
 
-  render() {
-    const images = this.props.images;
-
-    return (
-      <ul className={s.ImageGallery}>
-        <ImageGalleryItem
-          images={images}
-          changeImageURL={this.handlChangeModalImage}
-        />
-      </ul>
-    );
-  }
-}
+ImageGallery.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default ImageGallery;

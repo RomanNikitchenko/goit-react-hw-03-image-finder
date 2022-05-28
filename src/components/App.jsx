@@ -6,6 +6,7 @@ import imagesAPI from '../services/images-api';
 import s from './app.module.css';
 import ImagePendingView from './Loader/Loader';
 import Modal from './Modal/Modal';
+import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 
 class App extends React.Component {
   state = {
@@ -92,11 +93,11 @@ class App extends React.Component {
     });
   };
 
-  handlChangeModalImage = (source = '', alt = '') => {
+  handlChangeModalImage = (largeImageURL = '', tags = '') => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
-      largeImageURL: source,
-      alt: alt,
+      largeImageURL: largeImageURL,
+      alt: tags,
     }));
   };
 
@@ -121,7 +122,12 @@ class App extends React.Component {
         {status === 'repeat' && <div>Такой картинки нет</div>}
         {status === 'rejected' && <h1>{error.massage}</h1>}
         {status === 'resolved' && (
-          <ImageGallery images={images} onOpen={this.handlChangeModalImage} />
+          <ImageGallery>
+            <ImageGalleryItem
+              images={images}
+              changeImageURL={this.handlChangeModalImage}
+            />
+          </ImageGallery>
         )}
         {showModal && (
           <Modal onClose={this.handlChangeModalImage}>

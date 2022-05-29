@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 class Searchbar extends React.Component {
   state = {
     imagesName: '',
-    page: 1,
-    limit: 12,
   };
 
   handleNameChange = e => {

@@ -7,6 +7,7 @@ import s from './app.module.css';
 import ImagePendingView from './Loader/Loader';
 import Modal from './Modal/Modal';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
+import ImagesItem from './ImagesItem/ImagesItem';
 
 class App extends React.Component {
   state = {
@@ -48,7 +49,6 @@ class App extends React.Component {
         .then(images => {
           if (!images.hits.length) {
             return this.setState({
-              images: [...images.hits],
               openButton: false,
               status: 'repeat',
             });
@@ -76,11 +76,10 @@ class App extends React.Component {
     }
   }
 
-  handleFormSubmit = ({ imagesName, page, limit }) => {
+  handleFormSubmit = ({ imagesName }) => {
     this.setState({
       imagesName: imagesName,
-      page: page,
-      limit: limit,
+      page: 1,
     });
   };
 
@@ -123,10 +122,16 @@ class App extends React.Component {
         {status === 'rejected' && <h1>{error.massage}</h1>}
         {status === 'resolved' && (
           <ImageGallery>
-            <ImageGalleryItem
-              images={images}
-              changeImageURL={this.handlChangeModalImage}
-            />
+            {images.map(({ webformatURL, tags, largeImageURL }, index) => (
+              <ImageGalleryItem key={index}>
+                <ImagesItem
+                  webformatURL={webformatURL}
+                  tags={tags}
+                  largeImageURL={largeImageURL}
+                  handlChangeModalImage={this.handlChangeModalImage}
+                />
+              </ImageGalleryItem>
+            ))}
           </ImageGallery>
         )}
         {showModal && (

@@ -76,7 +76,7 @@ class App extends React.Component {
     }
   }
 
-  handleFormSubmit = ({ imagesName }) => {
+  handleFormSubmit = imagesName => {
     this.setState({
       imagesName: imagesName,
       page: 1,

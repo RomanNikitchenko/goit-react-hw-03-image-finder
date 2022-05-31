@@ -9,7 +9,6 @@ import ImagesItem from './ImagesItem/ImagesItem';
 import ImagePendingView from './Loader/Loader';
 import Modal from './Modal/Modal';
 
-
 const App = () => {
   const [images, setImages] = useState([]);
   const [imagesName, setImagesName] = useState('');
@@ -23,10 +22,9 @@ const App = () => {
   const [largeImageURL, setLargeImageURL] = useState('');
   const [alt, setAlt] = useState('');
 
-
   useEffect(() => {
     if (!imagesName) {
-      return
+      return;
     }
 
     setStatus('pending');
@@ -38,26 +36,23 @@ const App = () => {
         if (!images.hits.length) {
           setOpenButton(false);
           setStatus('repeat');
-          return
+          return;
         }
 
         setImages([...images.hits]);
         setOpenButton(true);
         setStatus('resolved');
         setTotalHits(images.totalHits);
-
       })
       .catch(error => {
-        setError(error)
+        setError(error);
         setStatus('rejected');
       });
-    
   }, [imagesName]);
-
 
   useEffect(() => {
     if (page === 1) {
-      return
+      return;
     }
 
     imagesAPI
@@ -67,34 +62,28 @@ const App = () => {
         setStatus('resolved');
         setOpenButton(true);
         setLoading(false);
-        
       })
       .catch(error => {
-        setError(error)
+        setError(error);
         setStatus('rejected');
       });
-    
   }, [page]);
-
 
   const handleFormSubmit = imagesName => {
     setImagesName(imagesName);
     setPage(1);
   };
 
-
   const handlPageButton = () => {
-    setPage(prevPage => prevPage + 1)
-    setLoading(true)
+    setPage(prevPage => prevPage + 1);
+    setLoading(true);
   };
 
-  
   const handlChangeModalImage = (largeImageURL = '', tags = '') => {
     setShowModal(!showModal);
     setLargeImageURL(largeImageURL);
     setAlt(tags);
   };
-
 
   return (
     <div className={s.App}>
@@ -128,14 +117,9 @@ const App = () => {
       )}
     </div>
   );
-}
-
+};
 
 export default App;
-
-
-
-
 
 // import React from 'react';
 // import { useState } from 'react';
